@@ -1,6 +1,5 @@
 public class DictionaryService
 {
-
     LetterDictionary dict1;
     NumberDictionary dict2;
     public DictionaryService()
@@ -12,11 +11,6 @@ public class DictionaryService
     {
         dict1.load(path1);
         dict2.load(path2);
-    }
-    public void saveAll(String path1, String path2)
-    {
-        dict1.save(path1);
-        dict2.save(path2);
     }
     public LetterDictionary getDict1()
     {

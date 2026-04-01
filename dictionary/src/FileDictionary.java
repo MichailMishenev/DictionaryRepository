@@ -3,17 +3,19 @@ import java.util.*;
 
 public abstract class FileDictionary implements Dictionary
 {
-    HashMap<String, String>map=new HashMap<>();
+    HashMap<String, String> map = new HashMap<>();
+    String filePath;
     public void load(String path)
     {
+        filePath = path;
         map.clear();
-        try (BufferedReader r=new BufferedReader(new FileReader(path)))
+        try (BufferedReader r = new BufferedReader(new FileReader(path)))
         {
             String s;
-            while ((s=r.readLine()) != null)
+            while ((s = r.readLine()) != null)
             {
                 String[] p = s.split(";");
-                if (p.length==2)
+                if (p.length == 2)
                 {
                     map.put(p[0], p[1]);
                 }
@@ -21,22 +23,22 @@ public abstract class FileDictionary implements Dictionary
         }
         catch (Exception e)
         {
-            System.out.println("Ошибка загрузки: "+e.getMessage());
+            System.out.println("Ошибка загрузки: " + e.getMessage());
         }
     }
-    public void save(String path)
+    void save()
     {
-        try (BufferedWriter w = new BufferedWriter(new FileWriter(path)))
+        try (BufferedWriter w = new BufferedWriter(new FileWriter(filePath)))
         {
             for (String k : map.keySet())
             {
-                w.write(k +";"+map.get(k));
+                w.write(k + ";" + map.get(k));
                 w.newLine();
             }
         }
         catch (Exception e)
         {
-            System.out.println("Ошибка сохранения: "+e.getMessage());
+            System.out.println("Ошибка сохранения: " + e.getMessage());
         }
     }
     public void add(String key, String val)
@@ -44,6 +46,8 @@ public abstract class FileDictionary implements Dictionary
         if (isValidKey(key))
         {
             map.put(key, val);
+            save();
+            System.out.println("Добавлено и сохранено");
         }
         else
         {
@@ -52,7 +56,16 @@ public abstract class FileDictionary implements Dictionary
     }
     public void remove(String key)
     {
-        map.remove(key);
+        if (map.containsKey(key))
+        {
+            map.remove(key);
+            save();
+            System.out.println("Удалено и сохранено");
+        }
+        else
+        {
+            System.out.println("Запись не найдена");
+        }
     }
     public String find(String key)
     {
@@ -67,7 +80,7 @@ public abstract class FileDictionary implements Dictionary
         }
         for (String k : map.keySet())
         {
-            System.out.println(k+" -> "+map.get(k));
+            System.out.println(k + " -> " + map.get(k));
         }
     }
     public abstract boolean isValidKey(String key);

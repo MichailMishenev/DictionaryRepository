@@ -34,8 +34,7 @@ public class Main
             }
             else if (vibor == 4)
             {
-                serv.saveAll("dictionaries/letter_dict.txt", "dictionaries/number_dict.txt");
-                System.out.println("Завершение работы программы. Данные сохранены в файлы");
+                System.out.println("Завершение работы программы");
                 break;
             }
             else
@@ -49,7 +48,7 @@ public class Main
     {
         while (true)
         {
-            System.out.println("\nВыберите действие со словарем "+name+":");
+            System.out.println("\nВыберите действие со словарем " + name + ":");
             System.out.println("1. Добавить запись");
             System.out.println("2. Удалить запись");
             System.out.println("3. Найти запись");
@@ -71,7 +70,6 @@ public class Main
                 System.out.print("Введите ключ для удаления: ");
                 String key = scan.nextLine();
                 dict.remove(key);
-                System.out.println("Удалено (если существовало)");
             }
             else if (vibor == 3)
             {
@@ -80,7 +78,7 @@ public class Main
                 String result = dict.find(key);
                 if (result != null)
                 {
-                    System.out.println("Найдено: "+key+ " -> "+ result);
+                    System.out.println("Найдено: " + key + " -> " + result);
                 }
                 else
                 {
