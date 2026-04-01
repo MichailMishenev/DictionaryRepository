@@ -3,108 +3,47 @@ import java.io.File;
 
 public class Main
 {
-    static String letterPath;
-    static String numberPath;
+    static String dictPath;
+    static String dictType;
+    static Dictionary dict;
     public static void main(String[] args)
     {
-        DictionaryService serv = new DictionaryService();
         Scanner scan = new Scanner(System.in);
-        System.out.print("Введите путь к файлу буквенного словаря: ");
-        letterPath = scan.nextLine();
-        System.out.print("Введите путь к файлу числового словаря: ");
-        numberPath = scan.nextLine();
-        serv.loadAll(letterPath, numberPath);
-        while (true)
+        System.out.println("1. Буквенный словарь");
+        System.out.println("2. Численный словарь");
+        System.out.print("Выбор: ");
+        int vibor = scan.nextInt();
+        scan.nextLine();
+        if (vibor == 1)
         {
-            System.out.println("\nВыберите действие:");
-            System.out.println("1. Вывести словари");
-            System.out.println("2. Взаимодействие со словарем букв");
-            System.out.println("3. Взаимодействие со словарем цифр");
-            System.out.println("4. Изменить путь к буквенному словарю");
-            System.out.println("5. Изменить путь к числовому словарю");
-            System.out.println("6. Выход");
-            System.out.print("Выбор: ");
-            int vibor = scan.nextInt();
-            scan.nextLine();
-            if (vibor == 1)
-            {
-                System.out.println("\nСловарь букв:");
-                serv.getDict1().showAll();
-                System.out.println("\nСловарь цифр:");
-                serv.getDict2().showAll();
-            }
-            else if (vibor == 2)
-            {
-                workWithDict(scan, serv.getDict1(), "букв");
-            }
-            else if (vibor == 3)
-            {
-                workWithDict(scan, serv.getDict2(), "цифр");
-            }
-            else if (vibor == 4)
-            {
-                System.out.println("\nТекущий путь: " + letterPath);
-                System.out.print("Введите новый путь для буквенного словаря: ");
-                String input = scan.nextLine();
-                if (!input.trim().isEmpty())
-                {
-                    File f = new File(input);
-                    if (f.exists())
-                    {
-                        letterPath = input;
-                        serv.getDict1().load(letterPath);
-                        System.out.println("Путь изменен, словарь загружен");
-                    }
-                    else
-                    {
-                        System.out.println("Ошибка! Файл не найден. Путь не изменен");
-                    }
-                }
-            }
-            else if (vibor == 5)
-            {
-                System.out.println("\nТекущий путь: " + numberPath);
-                System.out.print("Введите новый путь для числового словаря: ");
-                String input = scan.nextLine();
-                if (!input.trim().isEmpty())
-                {
-                    File f = new File(input);
-                    if (f.exists())
-                    {
-                        numberPath = input;
-                        serv.getDict2().load(numberPath);
-                        System.out.println("Путь изменен, словарь загружен");
-                    }
-                    else
-                    {
-                        System.out.println("Ошибка! Файл не найден. Путь не изменен");
-                    }
-                }
-            }
-            else if (vibor == 6)
-            {
-                System.out.println("Завершение работы программы");
-                break;
-            }
-            else
-            {
-                System.out.println("Неверный выбор");
-            }
+            dictType = "букв";
+            dict = new LetterDictionary();
         }
-        scan.close();
-    }
-    private static void workWithDict(Scanner scan, Dictionary dict, String name)
-    {
+        else if (vibor == 2)
+        {
+            dictType = "цифр";
+            dict = new NumberDictionary();
+        }
+        else
+        {
+            System.out.println("Неверный выбор. Завершение программы");
+            scan.close();
+            return;
+        }
+        System.out.print("Введите путь к файлу словаря: ");
+        dictPath = scan.nextLine();
+        dict.load(dictPath);
         while (true)
         {
-            System.out.println("\nВыберите действие со словарем " + name + ":");
+            System.out.println("\nВыберите действие со словарем " + dictType + ":");
             System.out.println("1. Добавить запись");
             System.out.println("2. Удалить запись");
             System.out.println("3. Найти запись");
             System.out.println("4. Показать все");
-            System.out.println("5. Назад");
+            System.out.println("5. Изменить путь к файлу");
+            System.out.println("6. Выход");
             System.out.print("Выбор: ");
-            int vibor = scan.nextInt();
+            vibor = scan.nextInt();
             scan.nextLine();
             if (vibor == 1)
             {
@@ -140,6 +79,27 @@ public class Main
             }
             else if (vibor == 5)
             {
+                System.out.println("\nТекущий путь: " + dictPath);
+                System.out.print("Введите новый путь: ");
+                String input = scan.nextLine();
+                if (!input.trim().isEmpty())
+                {
+                    File f = new File(input);
+                    if (f.exists())
+                    {
+                        dictPath = input;
+                        dict.load(dictPath);
+                        System.out.println("Путь изменен, словарь загружен");
+                    }
+                    else
+                    {
+                        System.out.println("Ошибка! Файл не найден. Путь не изменен");
+                    }
+                }
+            }
+            else if (vibor == 6)
+            {
+                System.out.println("Завершение работы программы");
                 break;
             }
             else
@@ -147,5 +107,6 @@ public class Main
                 System.out.println("Неверный выбор");
             }
         }
+        scan.close();
     }
 }
