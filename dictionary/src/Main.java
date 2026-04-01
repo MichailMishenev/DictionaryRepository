@@ -3,13 +3,17 @@ import java.io.File;
 
 public class Main
 {
-    static String letterPath = "dictionaries/letter_dict.txt";
-    static String numberPath = "dictionaries/number_dict.txt";
+    static String letterPath;
+    static String numberPath;
     public static void main(String[] args)
     {
         DictionaryService serv = new DictionaryService();
         Scanner scan = new Scanner(System.in);
-        loadDictionaries(serv);
+        System.out.print("Введите путь к файлу буквенного словаря: ");
+        letterPath = scan.nextLine();
+        System.out.print("Введите путь к файлу числового словаря: ");
+        numberPath = scan.nextLine();
+        serv.loadAll(letterPath, numberPath);
         while (true)
         {
             System.out.println("\nВыберите действие:");
@@ -44,9 +48,17 @@ public class Main
                 String input = scan.nextLine();
                 if (!input.trim().isEmpty())
                 {
-                    letterPath = input;
-                    loadDictionaries(serv);
-                    System.out.println("Путь изменен, словарь перезагружен");
+                    File f = new File(input);
+                    if (f.exists())
+                    {
+                        letterPath = input;
+                        serv.getDict1().load(letterPath);
+                        System.out.println("Путь изменен, словарь загружен");
+                    }
+                    else
+                    {
+                        System.out.println("Ошибка! Файл не найден. Путь не изменен");
+                    }
                 }
             }
             else if (vibor == 5)
@@ -56,9 +68,17 @@ public class Main
                 String input = scan.nextLine();
                 if (!input.trim().isEmpty())
                 {
-                    numberPath = input;
-                    loadDictionaries(serv);
-                    System.out.println("Путь изменен, словарь перезагружен");
+                    File f = new File(input);
+                    if (f.exists())
+                    {
+                        numberPath = input;
+                        serv.getDict2().load(numberPath);
+                        System.out.println("Путь изменен, словарь загружен");
+                    }
+                    else
+                    {
+                        System.out.println("Ошибка! Файл не найден. Путь не изменен");
+                    }
                 }
             }
             else if (vibor == 6)
@@ -72,10 +92,6 @@ public class Main
             }
         }
         scan.close();
-    }
-    private static void loadDictionaries(DictionaryService serv)
-    {
-        serv.loadAll(letterPath, numberPath);
     }
     private static void workWithDict(Scanner scan, Dictionary dict, String name)
     {
