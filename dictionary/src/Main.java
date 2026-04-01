@@ -1,19 +1,24 @@
 import java.util.Scanner;
+import java.io.File;
 
 public class Main
 {
+    static String letterPath = "dictionaries/letter_dict.txt";
+    static String numberPath = "dictionaries/number_dict.txt";
     public static void main(String[] args)
     {
         DictionaryService serv = new DictionaryService();
         Scanner scan = new Scanner(System.in);
-        serv.loadAll("dictionaries/letter_dict.txt", "dictionaries/number_dict.txt");
+        loadDictionaries(serv);
         while (true)
         {
             System.out.println("\nВыберите действие:");
             System.out.println("1. Вывести словари");
             System.out.println("2. Взаимодействие со словарем букв");
             System.out.println("3. Взаимодействие со словарем цифр");
-            System.out.println("4. Выход");
+            System.out.println("4. Изменить путь к буквенному словарю");
+            System.out.println("5. Изменить путь к числовому словарю");
+            System.out.println("6. Выход");
             System.out.print("Выбор: ");
             int vibor = scan.nextInt();
             scan.nextLine();
@@ -34,6 +39,30 @@ public class Main
             }
             else if (vibor == 4)
             {
+                System.out.println("\nТекущий путь: " + letterPath);
+                System.out.print("Введите новый путь для буквенного словаря: ");
+                String input = scan.nextLine();
+                if (!input.trim().isEmpty())
+                {
+                    letterPath = input;
+                    loadDictionaries(serv);
+                    System.out.println("Путь изменен, словарь перезагружен");
+                }
+            }
+            else if (vibor == 5)
+            {
+                System.out.println("\nТекущий путь: " + numberPath);
+                System.out.print("Введите новый путь для числового словаря: ");
+                String input = scan.nextLine();
+                if (!input.trim().isEmpty())
+                {
+                    numberPath = input;
+                    loadDictionaries(serv);
+                    System.out.println("Путь изменен, словарь перезагружен");
+                }
+            }
+            else if (vibor == 6)
+            {
                 System.out.println("Завершение работы программы");
                 break;
             }
@@ -43,6 +72,10 @@ public class Main
             }
         }
         scan.close();
+    }
+    private static void loadDictionaries(DictionaryService serv)
+    {
+        serv.loadAll(letterPath, numberPath);
     }
     private static void workWithDict(Scanner scan, Dictionary dict, String name)
     {
