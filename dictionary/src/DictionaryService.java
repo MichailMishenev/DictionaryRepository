@@ -7,7 +7,7 @@ public class DictionaryService
         dict1 = new LetterDictionary();
         dict2 = new NumberDictionary();
     }
-    public void loadAll(String path1, String path2)
+    public void loadAll(String path1, String path2) throws Exception
     {
         dict1.load(path1);
         dict2.load(path2);

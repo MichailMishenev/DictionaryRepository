@@ -4,11 +4,13 @@ import java.util.*;
 public abstract class FileDictionary implements Dictionary
 {
     HashMap<String, String> map = new HashMap<>();
+    List<String> allLines = new ArrayList<>();
     String filePath;
     public void load(String path)
     {
         filePath = path;
         map.clear();
+        allLines.clear();
         try (BufferedReader r = new BufferedReader(new FileReader(path)))
         {
             String s;
@@ -17,7 +19,21 @@ public abstract class FileDictionary implements Dictionary
                 String[] p = s.split(";");
                 if (p.length == 2)
                 {
-                    map.put(p[0], p[1]);
+                    String key = p[0];
+                    String val = p[1];
+                    if (isValidKey(key))
+                    {
+                        map.put(key, val);
+                        allLines.add(s);
+                    }
+                    else
+                    {
+                        allLines.add(s);
+                    }
+                }
+                else
+                {
+                    allLines.add(s);
                 }
             }
         }
@@ -30,9 +46,9 @@ public abstract class FileDictionary implements Dictionary
     {
         try (BufferedWriter w = new BufferedWriter(new FileWriter(filePath)))
         {
-            for (String k : map.keySet())
+            for (String line : allLines)
             {
-                w.write(k + ";" + map.get(k));
+                w.write(line);
                 w.newLine();
             }
         }
@@ -46,6 +62,8 @@ public abstract class FileDictionary implements Dictionary
         if (isValidKey(key))
         {
             map.put(key, val);
+            String newLine = key + ";" + val;
+            allLines.add(newLine);
             save();
             System.out.println("Добавлено и сохранено");
         }
@@ -59,6 +77,16 @@ public abstract class FileDictionary implements Dictionary
         if (map.containsKey(key))
         {
             map.remove(key);
+            for (int i = 0; i < allLines.size(); i++)
+            {
+                String line = allLines.get(i);
+                String[] p = line.split(";");
+                if (p.length == 2 && p[0].equals(key))
+                {
+                    allLines.remove(i);
+                    break;
+                }
+            }
             save();
             System.out.println("Удалено и сохранено");
         }
